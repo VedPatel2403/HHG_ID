@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Twitter, Download, Copy, Check, ExternalLink, Sparkles, AlertCircle, Trophy, ShieldCheck } from 'lucide-react';
+import { X, Twitter, Download, Copy, Check, ExternalLink, Sparkles, AlertCircle, Trophy, ShieldCheck, Share2 } from 'lucide-react';
 import { sounds } from '../utils/audioEffects';
 import confetti from 'canvas-confetti';
 
@@ -12,9 +12,33 @@ export default function ShareModal({ isOpen, onClose, badgeData, format }) {
 
   const tweetIntentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetCaption)}`;
 
-  const handlePostToX = () => {
+  // Share Image + Tweet Text via Web Share API or Tweet Intent
+  const handleShareAndPost = async () => {
     sounds.playSuccess();
     confetti({ particleCount: 120, spread: 80, origin: { y: 0.5 } });
+
+    // Copy caption to clipboard automatically
+    try {
+      await navigator.clipboard.writeText(tweetCaption);
+      setCopiedText(true);
+      setTimeout(() => setCopiedText(false), 2500);
+    } catch (e) {}
+
+    // Trigger Web Share API if supported
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'HH Goa 2026 Graphic',
+          text: tweetCaption,
+          url: 'https://vedpatel2403.github.io/HHG_ID/'
+        });
+        return;
+      } catch (err) {
+        // Fallback to direct X tweet intent if user cancels native sheet
+      }
+    }
+
+    // Open pre-filled X tweet intent in new window
     window.open(tweetIntentUrl, '_blank', 'noopener,noreferrer');
   };
 
@@ -26,11 +50,11 @@ export default function ShareModal({ isOpen, onClose, badgeData, format }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-md animate-fadeIn">
-      <div className="bg-white border border-slate-200 rounded-3xl p-6 lg:p-8 max-w-lg w-full shadow-2xl relative overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-fadeIn">
+      <div className="bg-slate-900 border border-cyan-500/40 rounded-3xl p-5 sm:p-7 max-w-lg w-full shadow-2xl relative overflow-hidden text-slate-100">
         
-        {/* Soft Glow orb */}
-        <div className="absolute -top-20 -right-20 w-56 h-56 bg-cyan-400/15 rounded-full blur-3xl pointer-events-none" />
+        {/* Ambient Glow */}
+        <div className="absolute -top-20 -right-20 w-56 h-56 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none" />
 
         {/* Close Button */}
         <button
@@ -38,56 +62,56 @@ export default function ShareModal({ isOpen, onClose, badgeData, format }) {
             sounds.playClick();
             onClose();
           }}
-          className="absolute top-5 right-5 p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+          className="absolute top-4 right-4 p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Modal Header */}
         <div className="flex items-center space-x-3 mb-4">
-          <div className="w-10 h-10 rounded-2xl bg-cyan-100 border border-cyan-200 text-cyan-700 flex items-center justify-center font-bold text-xl">
-            🚀
+          <div className="w-10 h-10 rounded-2xl bg-cyan-500/20 border border-cyan-400/40 text-cyan-400 flex items-center justify-center font-bold text-xl shrink-0">
+            🌴
           </div>
           <div>
-            <h3 className="text-xl font-extrabold text-slate-900">Post on X to Get Shortlisted</h3>
-            <p className="text-xs text-cyan-700 font-mono font-semibold">Mandatory hashtag: #FrameInGoa</p>
+            <h3 className="text-lg sm:text-xl font-black text-white">Post on X with Pre-Filled Caption</h3>
+            <p className="text-xs text-cyan-300 font-mono font-bold">Mandatory hashtag: #FrameInGoa</p>
           </div>
         </div>
 
-        {/* Main CTA: Post on X */}
-        <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 mb-5">
-          <label className="text-xs font-semibold text-slate-700 mb-2 block">Pre-filled Tweet Caption:</label>
-          <div className="bg-white p-3 rounded-xl border border-slate-200 font-mono text-xs text-slate-800 mb-3 whitespace-pre-wrap leading-relaxed shadow-sm">
+        {/* Pre-filled Caption Box */}
+        <div className="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 mb-4">
+          <div className="flex justify-between items-center mb-2">
+            <label className="text-xs font-semibold text-slate-300">Pre-filled Tweet Caption:</label>
+            <button
+              onClick={handleCopyCaption}
+              className="text-[11px] font-mono text-cyan-400 hover:text-cyan-300 flex items-center space-x-1"
+            >
+              {copiedText ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+              <span>{copiedText ? 'Copied!' : 'Copy Caption'}</span>
+            </button>
+          </div>
+          <div className="bg-slate-900 p-3 rounded-xl border border-slate-800 font-mono text-xs text-cyan-200 mb-3 whitespace-pre-wrap leading-relaxed">
             {tweetCaption}
           </div>
 
-          <div className="flex space-x-2">
-            <button
-              onClick={handlePostToX}
-              className="flex-1 flex items-center justify-center space-x-2 py-3 px-4 bg-cyan-600 hover:bg-cyan-700 text-white font-black rounded-xl text-sm transition-all shadow-md shadow-cyan-500/25"
-            >
-              <Twitter className="w-4 h-4 fill-current" />
-              <span>Tweet Now on X</span>
-            </button>
-
-            <button
-              onClick={handleCopyCaption}
-              className="py-3 px-3 bg-white hover:bg-slate-100 text-slate-700 rounded-xl text-xs font-bold transition-all border border-slate-200 shadow-sm"
-              title="Copy Caption"
-            >
-              {copiedText ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
-            </button>
-          </div>
+          <button
+            onClick={handleShareAndPost}
+            className="w-full flex items-center justify-center space-x-2 py-3.5 px-4 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-slate-950 font-black rounded-xl text-sm transition-all shadow-lg shadow-cyan-500/25 active:scale-95 min-h-[46px]"
+          >
+            <Twitter className="w-4 h-4 fill-current shrink-0" />
+            <span>SHARE TO X (#FrameInGoa)</span>
+          </button>
         </div>
 
-        {/* Shortlisting Submission Rules Alert Box */}
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-5">
-          <div className="flex items-start space-x-3">
-            <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-            <div className="text-xs text-amber-900 leading-relaxed">
-              <strong className="text-amber-950 font-bold block mb-1">Final Submission Step:</strong>
-              1. Download your generated image & post on X with <span className="font-bold underline text-slate-900">#FrameInGoa</span>.<br />
-              2. Submit your live working link & X post link in the official registration form before <strong>11:59 PM, 13th August 2026</strong>.
+        {/* Shortlisting Instructions Alert Box */}
+        <div className="bg-cyan-950/40 border border-cyan-500/30 rounded-2xl p-3.5 mb-4 text-xs text-cyan-200 leading-relaxed">
+          <div className="flex items-start space-x-2.5">
+            <Sparkles className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+            <div>
+              <strong className="text-white font-bold block mb-1">Final Submission Checklist:</strong>
+              1. Download your HD PNG image.<br />
+              2. Share your image on X with <span className="font-bold underline text-white">#FrameInGoa</span>.<br />
+              3. Submit your post link in the official Google form.
             </div>
           </div>
         </div>
@@ -97,11 +121,11 @@ export default function ShareModal({ isOpen, onClose, badgeData, format }) {
           href="https://forms.gle/jM5hTaGvsrfEfixPA"
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full flex items-center justify-center space-x-2 py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs border border-slate-800 transition-all text-center shadow-sm"
+          className="w-full flex items-center justify-center space-x-2 py-3 px-4 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-xs border border-slate-700 transition-all text-center min-h-[42px]"
         >
-          <Trophy className="w-4 h-4 text-amber-400" />
-          <span>Open Official Form (forms.gle/jM5hTaGvsrfEfixPA)</span>
-          <ExternalLink className="w-3.5 h-3.5" />
+          <Trophy className="w-4 h-4 text-amber-400 shrink-0" />
+          <span className="truncate">Open Official Application Form (forms.gle/jM5hTaGvsrfEfixPA)</span>
+          <ExternalLink className="w-3.5 h-3.5 shrink-0" />
         </a>
 
       </div>
