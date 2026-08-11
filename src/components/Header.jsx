@@ -22,8 +22,8 @@ export default function Header({ soundEnabled, setSoundEnabled, onOpenShare }) {
                 <h1 className="font-black text-sm sm:text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-400 to-amber-300">
                   HH GOA 2026
                 </h1>
-                <span className="bg-gradient-to-r from-pink-500 to-purple-600 text-white text-[8px] sm:text-[10px] font-extrabold px-1.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm shrink-0">
-                  Shortlist
+                <span className="bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-600 text-white text-[8px] sm:text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider shadow-sm shrink-0">
+                  ID GENERATOR TOOL
                 </span>
               </div>
               <p className="text-[9px] sm:text-xs text-slate-400 font-medium">
