@@ -11,6 +11,8 @@ import ShareModal from './components/ShareModal';
 import PresetGallery from './components/PresetGallery';
 import Footer from './components/Footer';
 import { generateRandomIdNumber, getRandomTitle } from './utils/titleGenerator';
+import { Share2, Download, Sparkles } from 'lucide-react';
+import { sounds } from './utils/audioEffects';
 
 export default function App() {
   // Main State Management
@@ -71,9 +73,9 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between relative overflow-hidden">
+    <div className="min-h-screen flex flex-col justify-between relative overflow-hidden pb-16 lg:pb-0">
       
-      {/* Morphing Liquid Glass Orbs */}
+      {/* Background Ambient Glow Orbs */}
       <div className="liquid-orb-1" />
       <div className="liquid-orb-2" />
       <div className="liquid-orb-3" />
@@ -87,7 +89,7 @@ export default function App() {
         />
 
         {/* Main Content Body */}
-        <main className="max-w-7xl mx-auto px-4 lg:px-8 py-8">
+        <main className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
           
           {/* Top Hero Banner */}
           <HeroBanner />
@@ -99,10 +101,10 @@ export default function App() {
           />
 
           {/* Main 2-Column Responsive Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
             
             {/* Left Column: Generator Controls & Inputs (7 cols) */}
-            <div className="lg:col-span-7 space-y-6">
+            <div className="lg:col-span-7 space-y-4 sm:space-y-6">
               
               {/* Step 1: Photo Uploader */}
               <PhotoUploader
@@ -145,11 +147,30 @@ export default function App() {
           </div>
 
           {/* Community Inspiration Showcase */}
-          <div className="mt-16">
+          <div className="mt-12 sm:mt-16">
             <PresetGallery onLoadSample={handleLoadSample} />
           </div>
 
         </main>
+      </div>
+
+      {/* Sticky Mobile Floating Bottom Action Bar */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-slate-950/90 backdrop-blur-xl border-t border-cyan-500/30 p-2.5 px-4 flex items-center justify-between lg:hidden shadow-2xl">
+        <div className="flex items-center space-x-2">
+          <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping" />
+          <span className="text-xs font-mono font-bold text-cyan-300">#FrameInGoa</span>
+        </div>
+
+        <button
+          onClick={() => {
+            sounds.playSuccess();
+            setIsShareOpen(true);
+          }}
+          className="flex items-center space-x-2 py-2.5 px-4 bg-gradient-to-r from-cyan-500 to-blue-600 active:scale-95 text-slate-950 font-black rounded-xl text-xs shadow-lg shadow-cyan-500/30"
+        >
+          <Share2 className="w-4 h-4 shrink-0" />
+          <span>EXPORT & POST ON X</span>
+        </button>
       </div>
 
       {/* Footer */}

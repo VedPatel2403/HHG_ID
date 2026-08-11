@@ -45,21 +45,23 @@ export default function BadgeForm({ badgeData, setBadgeData }) {
   };
 
   return (
-    <div className="liquid-glass rounded-3xl p-5 border border-white/90 shadow-md mb-6">
+    <div className="bg-slate-900/60 rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-slate-800 mb-6">
       
-      <div className="flex items-center justify-between mb-4">
-        <label className="text-xs font-extrabold uppercase tracking-wider text-slate-800 flex items-center space-x-1.5">
-          <User className="w-4 h-4 text-amber-600" />
-          <span>Step 2: Builder Info & Fun Fields</span>
+      <div className="flex items-center justify-between mb-3.5">
+        <label className="text-xs font-extrabold uppercase tracking-wider text-slate-300 flex items-center space-x-1.5">
+          <User className="w-4 h-4 text-amber-400 shrink-0" />
+          <span>Step 2: Builder Info</span>
         </label>
-        <span className="text-[10px] text-amber-900 font-mono font-bold liquid-pill px-2.5 py-1 rounded-lg">Format B Customization</span>
+        <span className="text-[10px] text-amber-400 font-mono font-semibold bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/30">
+          Format B
+        </span>
       </div>
 
       <div className="space-y-4">
         
         {/* Name Input */}
         <div>
-          <label className="block text-xs font-semibold text-slate-700 mb-1">
+          <label className="block text-xs font-semibold text-slate-300 mb-1">
             Builder / Hacker Name:
           </label>
           <input
@@ -68,7 +70,7 @@ export default function BadgeForm({ badgeData, setBadgeData }) {
             onChange={handleNameChange}
             placeholder="e.g. Satoshi Nakamoto"
             maxLength={24}
-            className="liquid-input w-full rounded-xl px-4 py-2.5 text-sm text-slate-900 font-medium focus:outline-none placeholder:text-slate-400"
+            className="w-full bg-slate-950/80 border border-slate-800 focus:border-cyan-400 rounded-xl px-3.5 py-3 text-sm text-white font-medium focus:outline-none transition-all placeholder:text-slate-600 min-h-[44px]"
           />
         </div>
 
@@ -76,13 +78,13 @@ export default function BadgeForm({ badgeData, setBadgeData }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
+            <label className="block text-xs font-semibold text-slate-300 mb-1">
               Primary Role:
             </label>
             <select
               value={badgeData.role}
               onChange={handleRoleChange}
-              className="liquid-input w-full rounded-xl px-3.5 py-2.5 text-xs text-slate-900 font-medium focus:outline-none"
+              className="w-full bg-slate-950/80 border border-slate-800 focus:border-cyan-400 rounded-xl px-3.5 py-3 text-xs text-white font-medium focus:outline-none transition-all min-h-[44px]"
             >
               <option value="General Hacker">🌴 General Hacker</option>
               <option value="AI / ML">🤖 AI / ML Engineer</option>
@@ -95,13 +97,13 @@ export default function BadgeForm({ badgeData, setBadgeData }) {
 
           <div>
             <div className="flex justify-between items-center mb-1">
-              <label className="block text-xs font-semibold text-slate-700">
+              <label className="block text-xs font-semibold text-slate-300">
                 Generated Builder Title:
               </label>
               <button
                 type="button"
                 onClick={randomizeTitle}
-                className="text-[10px] text-cyan-700 hover:text-cyan-900 font-mono font-extrabold flex items-center space-x-1"
+                className="text-[10px] text-cyan-400 hover:text-cyan-300 font-mono font-bold flex items-center space-x-1 py-0.5 px-1.5 bg-slate-800/60 rounded"
               >
                 <Dices className="w-3 h-3" />
                 <span>Randomize</span>
@@ -114,7 +116,7 @@ export default function BadgeForm({ badgeData, setBadgeData }) {
                 onChange={(e) => setBadgeData(prev => ({ ...prev, title: e.target.value }))}
                 placeholder="e.g. Solana Gasless Alchemist"
                 maxLength={30}
-                className="liquid-input w-full rounded-xl px-4 py-2.5 text-xs text-amber-900 font-mono font-bold focus:outline-none"
+                className="w-full bg-slate-950/80 border border-slate-800 focus:border-amber-400 rounded-xl px-3.5 py-3 text-xs text-amber-300 font-mono font-bold focus:outline-none min-h-[44px]"
               />
             </div>
           </div>
@@ -124,8 +126,8 @@ export default function BadgeForm({ badgeData, setBadgeData }) {
         {/* Tech Stack Pills (Pick up to 4) */}
         <div>
           <div className="flex justify-between items-center mb-1.5">
-            <span className="text-xs font-semibold text-slate-700">Tech Stack Pills (Select max 4):</span>
-            <span className="text-[10px] font-mono text-cyan-800 font-bold">{(badgeData.stack || []).length}/4 selected</span>
+            <span className="text-xs font-semibold text-slate-300">Tech Stack Pills (Select max 4):</span>
+            <span className="text-[10px] font-mono text-cyan-400">{(badgeData.stack || []).length}/4 selected</span>
           </div>
           <div className="flex flex-wrap gap-1.5">
             {STACK_OPTIONS.map((stack) => {
@@ -135,10 +137,10 @@ export default function BadgeForm({ badgeData, setBadgeData }) {
                   key={stack.id}
                   type="button"
                   onClick={() => toggleStack(stack.id)}
-                  className={`py-1.5 px-3 rounded-xl text-xs font-semibold transition-all border flex items-center space-x-1 ${
+                  className={`py-2 px-3 rounded-xl text-xs font-semibold transition-all border flex items-center space-x-1 active:scale-95 min-h-[38px] ${
                     isSelected
-                      ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md font-bold scale-[1.03]'
-                      : 'liquid-pill text-slate-700 hover:border-slate-300 hover:text-slate-900'
+                      ? 'bg-cyan-500/20 text-cyan-300 border-cyan-400 shadow-sm shadow-cyan-500/20 font-bold scale-[1.02]'
+                      : 'bg-slate-950/40 text-slate-400 border-slate-800 hover:border-slate-700 hover:text-white'
                   }`}
                 >
                   <span>{stack.icon}</span>
@@ -151,7 +153,7 @@ export default function BadgeForm({ badgeData, setBadgeData }) {
 
         {/* Badge Category Tag */}
         <div>
-          <span className="text-xs font-semibold text-slate-700 mb-1.5 block">Event Badge Status Pill:</span>
+          <span className="text-xs font-semibold text-slate-300 mb-1.5 block">Event Badge Status Pill:</span>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {BADGE_PILLS.map((pill) => {
               const isSelected = badgeData.badgePill === pill.label;
@@ -160,10 +162,10 @@ export default function BadgeForm({ badgeData, setBadgeData }) {
                   key={pill.id}
                   type="button"
                   onClick={() => setBadgePill(pill.label)}
-                  className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all text-center ${
+                  className={`py-2.5 px-3 rounded-xl text-xs font-bold border transition-all text-center active:scale-95 min-h-[40px] ${
                     isSelected
-                      ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-md'
-                      : 'liquid-pill text-slate-700 hover:border-slate-300'
+                      ? 'bg-gradient-to-r from-pink-500/20 to-purple-500/20 text-pink-300 border-pink-400 shadow-md shadow-pink-500/10'
+                      : 'bg-slate-950/40 text-slate-400 border-slate-800 hover:border-slate-700'
                   }`}
                 >
                   {pill.label}
@@ -175,7 +177,7 @@ export default function BadgeForm({ badgeData, setBadgeData }) {
 
         {/* Tagline / Goal Input */}
         <div>
-          <label className="block text-xs font-semibold text-slate-700 mb-1">
+          <label className="block text-xs font-semibold text-slate-300 mb-1">
             Hackathon Tagline or Goal:
           </label>
           <input
@@ -184,25 +186,25 @@ export default function BadgeForm({ badgeData, setBadgeData }) {
             onChange={(e) => setBadgeData(prev => ({ ...prev, tagline: e.target.value }))}
             placeholder="e.g. Building gasless dApps under the Goa sun!"
             maxLength={60}
-            className="liquid-input w-full rounded-xl px-4 py-2 text-xs text-slate-900 focus:outline-none"
+            className="w-full bg-slate-950/80 border border-slate-800 focus:border-cyan-400 rounded-xl px-3.5 py-3 text-xs text-slate-200 focus:outline-none min-h-[44px]"
           />
         </div>
 
         {/* ID Number Generator */}
-        <div className="flex items-center justify-between pt-2 border-t border-slate-200/80">
+        <div className="flex flex-row items-center justify-between pt-2 border-t border-slate-800/80">
           <div className="flex items-center space-x-2">
-            <span className="text-xs font-semibold text-slate-600">Unique ID Ticket:</span>
-            <span className="font-mono font-bold text-xs text-amber-900 liquid-pill px-3 py-1 rounded-lg">
+            <span className="text-xs font-semibold text-slate-400">ID Ticket:</span>
+            <span className="font-mono font-bold text-xs text-amber-400 bg-amber-400/10 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg border border-amber-400/30">
               {badgeData.idNumber}
             </span>
           </div>
           <button
             type="button"
             onClick={randomizeId}
-            className="text-xs text-cyan-700 hover:text-cyan-900 font-mono font-bold flex items-center space-x-1"
+            className="text-xs text-cyan-400 hover:text-cyan-300 font-mono font-semibold flex items-center space-x-1 py-1 px-2 bg-slate-800/60 rounded-lg active:scale-95"
           >
-            <RefreshCw className="w-3 h-3" />
-            <span>Generate New ID</span>
+            <RefreshCw className="w-3.5 h-3.5 shrink-0" />
+            <span>New ID</span>
           </button>
         </div>
 
