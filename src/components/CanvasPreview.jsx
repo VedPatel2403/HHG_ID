@@ -31,22 +31,32 @@ export default function CanvasPreview({
     }
   }, [format, image, photoState, badgeData, themeId]);
 
-  // 3D Holographic Card Mouse Move Tilt Effect
-  const handleMouseMove = (e) => {
+  // Mouse Move & Touch Drag 3D Card Tilt Effect for Mobile & Desktop
+  const handleMove = (clientX, clientY) => {
     if (!cardContainerRef.current) return;
     const rect = cardContainerRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
 
-    const rx = ((y - centerY) / centerY) * -14; // rotateX max 14 deg
-    const ry = ((x - centerX) / centerX) * 14;  // rotateY max 14 deg
+    const rx = ((y - centerY) / centerY) * -14;
+    const ry = ((x - centerX) / centerX) * 14;
 
     setTilt({ rx, ry });
   };
 
-  const handleMouseLeave = () => {
+  const handleMouseMove = (e) => {
+    handleMove(e.clientX, e.clientY);
+  };
+
+  const handleTouchMove = (e) => {
+    if (e.touches && e.touches[0]) {
+      handleMove(e.touches[0].clientX, e.touches[0].clientY);
+    }
+  };
+
+  const handleResetTilt = () => {
     setTilt({ rx: 0, ry: 0 });
   };
 
@@ -83,53 +93,55 @@ export default function CanvasPreview({
   };
 
   return (
-    <div className="sticky top-24">
+    <div className="sticky top-20 lg:top-24">
       
       {/* Container Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center space-x-2">
-          <Eye className="w-4 h-4 text-cyan-600" />
-          <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider">
-            Live HD Preview ({format === 'pfp' ? 'PFP Frame 1:1' : 'Builder Card 4:5'})
+          <Eye className="w-4 h-4 text-cyan-400" />
+          <h3 className="text-xs sm:text-sm font-extrabold text-white uppercase tracking-wider">
+            Live HD Preview ({format === 'pfp' ? 'PFP 1:1' : 'Card 4:5'})
           </h3>
         </div>
-        <span className="text-[10px] font-mono text-emerald-800 bg-emerald-100/90 px-2 py-0.5 rounded-full border border-emerald-300 flex items-center space-x-1 font-bold shadow-sm">
-          <Sparkles className="w-3 h-3 text-emerald-600" />
-          <span>Instant Real-Time Render</span>
+        <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/30 flex items-center space-x-1">
+          <Sparkles className="w-3 h-3" />
+          <span className="hidden sm:inline">Instant Render</span>
         </span>
       </div>
 
-      {/* 3D Holographic Tilt Wrapper */}
+      {/* 3D Holographic Tilt Wrapper (Mouse & Touch Enabled) */}
       <div
         ref={cardContainerRef}
         onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-        className="card-3d-wrap relative group mb-5 cursor-pointer"
+        onMouseLeave={handleResetTilt}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleResetTilt}
+        className="card-3d-wrap relative group mb-5 cursor-pointer touch-none"
       >
         <div
-          className="card-3d relative rounded-3xl overflow-hidden shadow-2xl border border-white transition-transform duration-100 ease-out bg-white/90 backdrop-blur-md"
+          className="card-3d relative rounded-3xl overflow-hidden shadow-2xl border border-cyan-500/30 transition-transform duration-100 ease-out"
           style={{
             transform: `rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`,
-            boxShadow: tilt.rx !== 0 ? '0 25px 50px -10px rgba(0, 180, 216, 0.3)' : '0 15px 35px -5px rgba(0, 0, 0, 0.08)'
+            boxShadow: tilt.rx !== 0 ? '0 25px 50px -12px rgba(0, 242, 254, 0.25)' : '0 10px 30px rgba(0, 0, 0, 0.5)'
           }}
         >
           {/* Canvas Element */}
           <canvas
             ref={canvasRef}
-            className="w-full h-auto max-h-[620px] object-contain rounded-3xl bg-slate-100 block"
+            className="w-full h-auto max-h-[580px] object-contain rounded-3xl bg-slate-950 block"
           />
 
           {/* Holographic Sheen Overlay */}
           <div className="card-3d-shine" />
 
           {/* Live Hashtag Overlay Pill */}
-          <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full border border-cyan-400 text-[10px] font-mono font-bold text-cyan-800 shadow-md">
+          <div className="absolute top-3 right-3 bg-black/80 backdrop-blur-md px-2.5 py-1 rounded-full border border-cyan-400/40 text-[9px] sm:text-[10px] font-mono font-bold text-cyan-300 shadow-md">
             #FrameInGoa
           </div>
         </div>
       </div>
 
-      {/* Main Download & Share Action Buttons */}
+      {/* Main Download & Share Action Buttons (Mobile Touch Optimized) */}
       <div className="space-y-2.5">
         
         {/* Share to X Primary CTA */}
@@ -139,10 +151,10 @@ export default function CanvasPreview({
             confetti({ particleCount: 100, spread: 90, origin: { y: 0.6 } });
             onOpenShare();
           }}
-          className="liquid-button w-full flex items-center justify-center space-x-2.5 py-4 px-6 text-white font-black text-sm lg:text-base rounded-2xl shadow-xl transition-all transform border border-cyan-300"
+          className="w-full flex items-center justify-center space-x-2 py-4 px-5 bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-slate-950 font-black text-sm sm:text-base rounded-2xl shadow-xl shadow-cyan-500/25 transition-all transform active:scale-95 border border-cyan-300/40 min-h-[52px]"
         >
-          <Share2 className="w-5 h-5" />
-          <span>DOWNLOAD & POST ON X (#FrameInGoa)</span>
+          <Share2 className="w-5 h-5 shrink-0" />
+          <span className="truncate">DOWNLOAD & POST ON X (#FrameInGoa)</span>
         </button>
 
         {/* Secondary Action Grid */}
@@ -151,25 +163,25 @@ export default function CanvasPreview({
           {/* Direct HD PNG Download */}
           <button
             onClick={() => handleDownload('png')}
-            className="flex items-center justify-center space-x-2 py-3 px-4 bg-white/90 hover:bg-white text-slate-800 rounded-xl text-xs font-bold border border-slate-200 transition-all shadow-sm backdrop-blur-md"
+            className="flex items-center justify-center space-x-1.5 py-3.5 px-3 bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white rounded-xl text-xs font-bold border border-slate-700/80 transition-all active:scale-95 min-h-[44px]"
           >
-            <Download className="w-4 h-4 text-cyan-600" />
+            <Download className="w-4 h-4 text-cyan-400 shrink-0" />
             <span>Download PNG</span>
           </button>
 
           {/* Copy to Clipboard */}
           <button
             onClick={handleCopyClipboard}
-            className="flex items-center justify-center space-x-2 py-3 px-4 bg-white/90 hover:bg-white text-slate-800 rounded-xl text-xs font-bold border border-slate-200 transition-all shadow-sm backdrop-blur-md"
+            className="flex items-center justify-center space-x-1.5 py-3.5 px-3 bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white rounded-xl text-xs font-bold border border-slate-700/80 transition-all active:scale-95 min-h-[44px]"
           >
             {copied ? (
               <>
-                <Check className="w-4 h-4 text-emerald-600" />
-                <span className="text-emerald-600">Copied!</span>
+                <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span className="text-emerald-400">Copied!</span>
               </>
             ) : (
               <>
-                <Copy className="w-4 h-4 text-amber-600" />
+                <Copy className="w-4 h-4 text-amber-400 shrink-0" />
                 <span>Copy Image</span>
               </>
             )}
@@ -177,8 +189,8 @@ export default function CanvasPreview({
 
         </div>
 
-        <p className="text-[11px] text-center text-slate-500 font-medium pt-1">
-          💡 <span className="text-slate-700">Requirement:</span> Post your downloaded graphic on X with <strong className="text-cyan-700 font-bold">#FrameInGoa</strong> to get shortlisted!
+        <p className="text-[11px] text-center text-slate-400 font-medium pt-1 leading-normal">
+          💡 <span className="text-slate-300">Requirement:</span> Post your downloaded graphic on X with <strong className="text-cyan-300">#FrameInGoa</strong> to get shortlisted!
         </p>
 
       </div>
