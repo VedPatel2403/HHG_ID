@@ -1,27 +1,38 @@
-// Web Audio API sound effects synthesizer with mobile touch & haptic vibration support
+// Web Audio API sound effects synthesizer with automatic mobile touch & haptic vibration support
 
 class SoundManager {
   constructor() {
     this.audioCtx = null;
     this.enabled = true;
     this.initialized = false;
-    this.setupTouchUnlock();
+    this.setupGlobalTouchSound();
   }
 
-  setupTouchUnlock() {
+  setupGlobalTouchSound() {
     if (typeof window === 'undefined') return;
+
+    // Unlock Web Audio API on first touch/click
     const unlock = () => {
       this.init();
       if (this.audioCtx && this.audioCtx.state === 'suspended') {
         this.audioCtx.resume();
       }
-      window.removeEventListener('touchstart', unlock);
-      window.removeEventListener('pointerdown', unlock);
-      window.removeEventListener('click', unlock);
     };
     window.addEventListener('touchstart', unlock, { passive: true, once: true });
     window.addEventListener('pointerdown', unlock, { passive: true, once: true });
     window.addEventListener('click', unlock, { passive: true, once: true });
+
+    // Global touch sound listener for all buttons, inputs, selects, and clickable elements
+    const handleGlobalTap = (e) => {
+      if (!this.enabled) return;
+      const target = e.target.closest('button, a, input, select, label, [role="button"], .card-3d');
+      if (target) {
+        this.playClick();
+      }
+    };
+
+    window.addEventListener('touchstart', handleGlobalTap, { passive: true });
+    window.addEventListener('click', handleGlobalTap, { passive: true });
   }
 
   init() {
@@ -57,10 +68,10 @@ class SoundManager {
       const gain = this.audioCtx.createGain();
 
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(650, this.audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(1300, this.audioCtx.currentTime + 0.04);
+      osc.frequency.setValueAtTime(700, this.audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1400, this.audioCtx.currentTime + 0.04);
 
-      gain.gain.setValueAtTime(0.12, this.audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.15, this.audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, this.audioCtx.currentTime + 0.04);
 
       osc.connect(gain);
@@ -91,7 +102,7 @@ class SoundManager {
         osc.type = 'triangle';
         osc.frequency.setValueAtTime(freq, now + index * 0.05);
 
-        gain.gain.setValueAtTime(0.12, now + index * 0.05);
+        gain.gain.setValueAtTime(0.14, now + index * 0.05);
         gain.gain.exponentialRampToValueAtTime(0.001, now + index * 0.05 + 0.18);
 
         osc.connect(gain);
@@ -118,10 +129,10 @@ class SoundManager {
       const gain = this.audioCtx.createGain();
 
       osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(320, this.audioCtx.currentTime);
-      osc.frequency.linearRampToValueAtTime(950, this.audioCtx.currentTime + 0.08);
+      osc.frequency.setValueAtTime(340, this.audioCtx.currentTime);
+      osc.frequency.linearRampToValueAtTime(1000, this.audioCtx.currentTime + 0.08);
 
-      gain.gain.setValueAtTime(0.08, this.audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.1, this.audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, this.audioCtx.currentTime + 0.08);
 
       osc.connect(gain);
