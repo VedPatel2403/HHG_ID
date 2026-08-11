@@ -2,7 +2,7 @@
 
 > Official shortlisting web application for **Hacker House Goa 2026**. Built with React, Vite, HTML5 Canvas, Tailwind CSS, and a Liquid Glass UI engine.
 
-Live Web App: **[https://vedpatel2403.github.io/Hackerhousegoaid/](https://vedpatel2403.github.io/Hackerhousegoaid/)**
+Live Web App: **[https://vedpatel2403.github.io/HHG_ID/](https://vedpatel2403.github.io/HHG_ID/)**
 
 ---
 
@@ -32,8 +32,8 @@ Live Web App: **[https://vedpatel2403.github.io/Hackerhousegoaid/](https://vedpa
 
 1. Clone repository:
    ```bash
-   git clone https://github.com/VedPatel2403/Hackerhousegoaid.git
-   cd Hackerhousegoaid
+   git clone https://github.com/VedPatel2403/HHG_ID.git
+   cd HHG_ID
    ```
 
 2. Install dependencies:
